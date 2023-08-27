@@ -1,0 +1,41 @@
+ .info-container {
+    width: 90%;
+    margin-left: 0;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+
+
+.row {
+    padding: 0.7rem 0;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid rgb(169, 168, 168);
+}
+
+.row .clave {
+    font-weight: bold;
+    color: grey;
+
+}
+
+.row .valor {
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+}
+
+.info-block {
+    padding: 30px 10%;
+}
+
+.litspan {
+    font-size: 14px;
+}
+
+.title {
+    font-weight: bold;
+} 
+
+
+
