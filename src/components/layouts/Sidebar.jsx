@@ -26,7 +26,7 @@ function Sidebar({ isLoading, isError, peopleData, getMore }) {
           setIsLoadingMore(true);
         });
       }
-    }, 4000);
+    }, 7000);
 
     return () => clearInterval(interval);
   }, [isLoading, isError, peopleData]);
@@ -42,30 +42,47 @@ function Sidebar({ isLoading, isError, peopleData, getMore }) {
   }, [isLoading, isFetching, isLoadingMore]);
 
   useEffect(() => {
-    // Obtener información adicional de especies y planetas
-    peopleData.forEach((person) => {
-      fetch(person.species)
-        .then((response) => response.json())
-        .then((data) => {
-          setSpeciesData((prevSpeciesData) => ({
-            ...prevSpeciesData,
-            [person.url]: data,
-          }));
-        })
-        .catch((error) => console.error("Error fetching species data:", error));
-
-      fetch(person.homeworld)
-        .then((response) => response.json())
-        .then((data) => {
-          setPlanetData((prevPlanetData) => ({
-            ...prevPlanetData,
-            [person.url]: data,
-          }));
-        })
-        .catch((error) => console.error("Error fetching planet data:", error));
-    });
+    if (peopleData.length > 0) {
+      // Obtener información adicional de especies y planetas
+      const fetchAdditionalData = async () => {
+        const fetchPromises = peopleData.map(async (person) => {
+          try {
+            const speciesResponse = await fetch(person.species);
+            if (speciesResponse.ok) {
+              const speciesData = await speciesResponse.json();
+              setSpeciesData((prevSpeciesData) => ({
+                ...prevSpeciesData,
+                [person.url]: speciesData,
+              }));
+            } else {
+              // console.error("Error fetching species data:", speciesResponse.status);
+            }
+  
+            const planetResponse = await fetch(person.homeworld);
+            if (planetResponse.ok) {
+              const planetData = await planetResponse.json();
+              setPlanetData((prevPlanetData) => ({
+                ...prevPlanetData,
+                [person.url]: planetData,
+              }));
+            } else {
+              // console.error("Error fetching planet data:", planetResponse.status);
+            }
+          } catch (error) {
+            // console.error("Error fetching data for", person.name, ":", error);
+          }
+        });
+  
+        await Promise.all(fetchPromises);
+      };
+  
+      fetchAdditionalData();
+    } else {
+      // Limpiar los datos de especies y planetas cuando no hay personajes
+      setSpeciesData({});
+      setPlanetData({});
+    }
   }, [peopleData]);
-
   return (
     <nav className="sidebar">
       <ul className="sidebar-list">
