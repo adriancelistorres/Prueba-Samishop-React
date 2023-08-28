@@ -132,6 +132,8 @@ function Sidebar({ isLoading, isError, peopleData, getMore }) {
           </div>
         ) : null}
 
+
+
         {/* Mostrar mensaje cuando ya no hay más personajes */}
         {!isLoadingMore &&
           !isLoading &&
